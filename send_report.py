@@ -56,11 +56,11 @@ def create_visualization(x,y):
     path = str(dir) + folder + filename
     fig.savefig(path, dpi=fig.dpi)
 
-    return path
+    return path, dir
 
-path = create_visualization(x,y)
+path, dir = create_visualization(x,y)
 
-def send_email(path):
+def send_email(path,dir):
     '''
         Send results via email
     '''
@@ -118,60 +118,22 @@ def send_email(path):
     # """, subtype='html')
 
 
-    # msg.attach(MIMEText(
-    # '''
-    # <html>
-    #     <body>
-    #         <h1 style="text-align: center;">Simple Data Report Template</h1>
-    #         <p><img src="cid:0"></p>
-    #     </body>
-    # </html>'
-    # ''',
-    # 'html', 'utf-8'))
-
     msg.attach(MIMEText(
     '''
     <html>
-        <body style="margin: 0; padding: 0;">
-            <table align="center" border="1" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
-                <tr>
-                    <td bgcolor="#70bbd9">
-                        <p style="margin: 0;">Simple Data Report Template!</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td bgcolor="#ffffff">
-                        <td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
-                            <table border="1" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
-                                <tr>
-                                    <td>
-                                        <p style="margin: 0;"><img src="cid:0"> 1</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p style="margin: 0;">Row 2</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p style="margin: 0;">Row 3</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </td>
-                </tr>
-                <tr>
-                    <td bgcolor="#ee4c50">
-                        <p style="margin: 0;">Row 3</p>
-                    </td>
-                </tr>
-            </table>
+        <body>
+            <h1 style="text-align: center;">Simple Data Report</h1>
+            <p><img src="cid:0"></p>
         </body>
     </html>'
     ''',
     'html', 'utf-8'))
+
+    # import codecs
+    # f = codecs.open(str(dir) + "/email.html", 'r')
+    # string = f.read()
+    # print(string)
+    # msg.attach(MIMEText(string,'html', 'utf-8'))
 
     # Send the email via our own SMTP server
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
@@ -181,4 +143,4 @@ def send_email(path):
     server.sendmail(gmail_user, [mail1, mail2], msg.as_string())
     server.quit()
 
-#send_email(path)
+send_email(path, dir)
