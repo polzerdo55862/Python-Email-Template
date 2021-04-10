@@ -1,7 +1,4 @@
 from datetime import datetime, date
-import pandas as pd
-import numpy as np
-import copy
 import os
 import smtplib
 import pathlib
@@ -42,7 +39,6 @@ def send_email(path,dir):
     # Open the files in binary mode.  Let the MIMEImage class automatically
     # guess the specific image type.
     with open(path, 'rb') as fp:
-        #fp = open(path, 'rb')
         img = MIMEImage(fp.read())
         img.add_header('Content-Disposition', 'attachment', filename='hours_plot.png')
         img.add_header('X-Attachment-Id', '0')

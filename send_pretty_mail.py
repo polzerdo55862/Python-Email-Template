@@ -20,7 +20,10 @@ dir = pathlib.Path(__file__).parent.absolute()
 folder = r"/results/"
 path = str(dir) + folder + filename
 
-def send_email(path,dir):
+folder_img = r"/img/"
+path_img =  str(dir) + folder_img + "header_img.png"
+
+def send_email(path,path_img,dir):
     '''
         Send results via email
     '''
@@ -52,23 +55,33 @@ def send_email(path,dir):
         fp.close()
         msg.attach(img)
 
+    with open(path_img, 'rb') as fp:
+        #fp = open(path, 'rb')
+        img = MIMEImage(fp.read())
+        img.add_header('Content-Disposition', 'attachment', filename='header.png')
+        img.add_header('X-Attachment-Id', '1')
+        img.add_header('Content-ID', '<1>')
+        fp.close()
+        msg.attach(img)
+
     # Attach the HTML email
     f = codecs.open(str(dir) + "/email.html", 'r')
     string = f.read()
-    html_string = string.replace("")
-    msg.attach(MIMEText(string,'html', 'utf-8'))
+    html_string = string.replace("./results/2021-04-08.png", "cid:0")
+    html_string = html_string.replace("./img/header_img.png", "cid:1")
+    msg.attach(MIMEText(html_string, 'html', 'utf-8'))
 
-    msg.attach(MIMEText(
-    '''
-    <html>
-        <body>
-            <h1 style="text-align: center;">Simple Data Report</h1>
-            <p>Here could be a short description of the data.</p>
-            <p><img src="cid:0"></p>
-        </body>
-    </html>'
-    ''',
-    'html', 'utf-8'))
+    # msg.attach(MIMEText(
+    # '''
+    # <html>
+    #     <body>
+    #         <h1 style="text-align: center;">Simple Data Report</h1>
+    #         <p>Here could be a short description of the data.</p>
+    #         <p><img src="cid:0"></p>
+    #     </body>
+    # </html>'
+    # ''',
+    # 'html', 'utf-8'))
 
     # Send the email via our own SMTP server
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
@@ -78,4 +91,4 @@ def send_email(path,dir):
     server.sendmail(gmail_user, [mail1, mail2], msg.as_string())
     server.quit()
 
-send_email(path, dir)
+send_email(path,path_img,dir)
