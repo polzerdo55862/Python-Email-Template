@@ -13,6 +13,8 @@ from email.mime.text import MIMEText
 from email.message import EmailMessage
 from email.mime.base import MIMEBase
 
+import codecs
+
 #Dataset
 x = [1,2,3,4,5,6,7,8,9,10]
 y = [1,2,3,4,5,8,8,9,3,1]
@@ -117,4 +119,4 @@ def send_email(path_plot,path_img,dir):
     server.sendmail(gmail_user, [mail1, mail2], msg.as_string())
     server.quit()
 
-send_email(path,path_img,dir)
+send_email(path_plot,path_img,dir)
